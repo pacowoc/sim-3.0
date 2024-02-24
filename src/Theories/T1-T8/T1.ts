@@ -19,6 +19,7 @@ class t1Sim extends theoryClass<theory> implements specificTheoryProps {
   term3: number;
   termRatio: number;
   c3Ratio: number;
+  m: number;
 
   getBuyingConditions() {
     const conditions: { [key in stratType[theory]]: Array<boolean | conditionFunction> } = {
@@ -27,6 +28,14 @@ class t1Sim extends theoryClass<theory> implements specificTheoryProps {
       T1C4: [true, true, false, false, false, true],
       T1Ratio: [
         () => this.variables[0].cost + 1 < this.rho,
+        () => this.variables[1].cost + l10(1.11) < this.rho,
+        () => this.variables[2].cost + this.termRatio + 1 <= this.rho,
+        () => this.variables[3].cost + this.termRatio <= this.rho,
+        () => this.variables[4].cost + l10(this.c3Ratio) < this.rho,
+        true,
+      ],
+      T1RatioC34: [
+        () => this.variables[0].cost + l10((11 + (this.variables[0].level % 10)a)/2) < this.rho,
         () => this.variables[1].cost + l10(1.11) < this.rho,
         () => this.variables[2].cost + this.termRatio + 1 <= this.rho,
         () => this.variables[3].cost + this.termRatio <= this.rho,
@@ -133,7 +142,7 @@ class t1Sim extends theoryClass<theory> implements specificTheoryProps {
     this.term1 = this.variables[2].value * (1 + 0.05 * this.milestones[1]) + this.variables[3].value + (this.milestones[0] > 0 ? l10(1 + this.rho / Math.LOG10E / 100) : 0);
     this.term2 = add(this.variables[4].value + this.rho * 0.2, this.variables[5].value + this.rho * 0.3);
     this.term3 = this.variables[0].value + this.variables[1].value;
-
+    this.term3 = this.variables[0].value + this.variables[1].value;
     const rhodot = add(this.term1, this.term2) + this.term3 + this.totMult + l10(this.dt);
     this.rho = add(this.rho, rhodot);
 
